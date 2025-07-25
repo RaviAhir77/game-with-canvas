@@ -1,4 +1,4 @@
-import { drawRactagnle,drawDownPath,keyListners} from "./reusable.js";
+import { drawRactagnle,drawDownPath,keyListners,drawObstacle, isColliding} from "./reusable.js";
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById('mycanvas');
 const ctx = canvas.getContext('2d');
@@ -10,8 +10,8 @@ const height = canvas.height;
 const params = {
   rectHeight: 50,
   rectWidth: 50,
-  rectX: 50,
-  rectY: 550,
+  x: 50,
+  y: 550,
   speed: 5,
   valocityY : 0,
   gravity : 0.5,
@@ -22,40 +22,59 @@ const params = {
 const keys = {
   left : false,
   right : false,
-  up : false,
+}
+
+const obstacle = {
+  x : 400,
+  y : height - 100,
+  width : 50,
+  height : 50,
+  color : '#98ed5bff'
 }
 
 keyListners(keys,params)
 
 function render(){
+  ctx.clearRect(0,0,width,height)
   drawRactagnle(ctx,width,height,params)
   drawDownPath(ctx,width,height)
+  drawObstacle(ctx,obstacle)
 }
 
 function update(){
-  if(keys.left) params.rectX -= params.speed;
-  if(keys.right) params.rectX += params.speed;
+  if(keys.left) params.x -= params.speed;
+  if(keys.right) params.x += params.speed;
 
   params.valocityY += params.gravity;
-  params.rectY += params.valocityY
+  params.y += params.valocityY
+
+  if(isColliding(params,obstacle)){
+    const playerBottom = params.y + params.rectHeight;
+    const obstacleTop = obstacle.y;
+
+    if(params.valocityY >= 0 && playerBottom - params.valocityY <= obstacleTop){
+      params.y = obstacle.y - params.rectHeight;
+      params.valocityY = 0;
+      params.isJumping = false
+    }else{
+      if(params.x < obstacle.x){
+        params.x = obstacle.x - params.rectWidth;
+      }else{
+        params.x = obstacle.x + params.rectWidth;
+      }
+    }
+  }
 
   const groundY = 600;
-  if(params.rectY >= groundY){
-    params.rectY = groundY;
+  if(params.y >= groundY){
+    params.y = groundY;
     params.valocityY = 0;
     params.isJumping = false
   }
 
-  params.rectX = Math.max(0,Math.min(width - params.rectWidth,params.rectX))
+  params.x = Math.max(0,Math.min(width - params.rectWidth,params.x))
   render();
   requestAnimationFrame(update)
 }
 
-update()
-
-
-
-
-
-
-
+ update();

@@ -22,13 +22,12 @@ export function drawGrid(ctx,width,height){
 }
 
 export const drawRactagnle = (ctx,width,height,params) => {
-    let {rectHeight,rectWidth,rectX,rectY,speed} = params
-    ctx.clearRect(0,0,width,height)
+    let {rectHeight,rectWidth,x,y,speed} = params
     ctx.beginPath()
-    ctx.rect(rectX,rectY,rectWidth,rectHeight)
+    ctx.rect(x,y,rectWidth,rectHeight)
     ctx.fillStyle = '#e224e2ff';
-    ctx.strokeStyle = 'white'
-    ctx.strokeRect(rectX,rectY,rectWidth,rectHeight)
+    ctx.strokeStyle = '#478e09ff'
+    ctx.strokeRect(x,y,rectWidth,rectHeight)
     ctx.fill()
     ctx.closePath()
 }
@@ -36,7 +35,7 @@ export const drawRactagnle = (ctx,width,height,params) => {
 export const drawDownPath = (ctx,width,height) => {
     ctx.beginPath()
     ctx.rect(0,height - 50,width,50)
-    ctx.fillStyle = '#39e739';
+    ctx.fillStyle = '#0e0e0eff';
     ctx.fill()
     ctx.closePath()
 }
@@ -60,4 +59,17 @@ export const keyListners = (keys,params) => {
             keys.right =false;
         }
     })
+}
+
+export const drawObstacle = (ctx,obs) => {
+    ctx.beginPath();
+    ctx.fillStyle = obs.color
+    ctx.fillRect(obs.x,obs.y,obs.width,obs.height)
+    ctx.closePath()
+}
+
+export const isColliding = (a,b) => {
+    return (
+        a.x < b.x + b.width && a.x + a.rectWidth > b.x && a.y < b.y + b.height && a.y + a.rectHeight > b.y
+    )
 }
