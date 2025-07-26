@@ -32,6 +32,19 @@ const obstacle = {
   color : '#98ed5bff'
 }
 
+const tilesWidth = 100;
+const groundTiles = [];
+
+for(let i = 0; i < Math.ceil(width / tilesWidth ) + 2 ; i++){
+  groundTiles.push({
+    x : i * groundTiles,
+    y : height - 50,
+    width : groundTiles,
+    height : 50,
+    color : '#000000'
+  })
+}
+
 keyListners(keys,params)
 
 function render(){
