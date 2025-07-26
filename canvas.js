@@ -37,11 +37,19 @@ const groundTiles = [];
 
 for(let i = 0; i < Math.ceil(width / tilesWidth ) + 2 ; i++){
   groundTiles.push({
-    x : i * groundTiles,
+    x : i * tilesWidth,
     y : height - 50,
-    width : groundTiles,
+    width : tilesWidth,
     height : 50,
     color : '#000000'
+  })
+}
+
+const tileIncrementer = () => {
+  groundTiles.forEach(tile => {
+    if(tile.x + tile.width < 0){
+      tile.x = Math.max(...groundTiles.map(t => t.x)) + tilesWidth
+    }
   })
 }
 
@@ -49,14 +57,17 @@ keyListners(keys,params)
 
 function render(){
   ctx.clearRect(0,0,width,height)
+  drawDownPath(ctx,groundTiles)
   drawRactagnle(ctx,width,height,params)
-  drawDownPath(ctx,width,height)
   drawObstacle(ctx,obstacle)
 }
 
 function update(){
   if(keys.left) params.x -= params.speed;
-  if(keys.right) params.x += params.speed;
+  // if(keys.right) params.x += params.speed;
+  if(keys.right){
+    groundTiles.forEach(tile => tile.x -= params.speed)
+  }
 
   params.valocityY += params.gravity;
   params.y += params.valocityY
@@ -87,6 +98,7 @@ function update(){
 
   params.x = Math.max(0,Math.min(width - params.rectWidth,params.x))
   render();
+  tileIncrementer()
   requestAnimationFrame(update)
 }
 

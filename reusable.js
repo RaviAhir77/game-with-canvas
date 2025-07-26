@@ -32,12 +32,14 @@ export const drawRactagnle = (ctx,width,height,params) => {
     ctx.closePath()
 }
 
-export const drawDownPath = (ctx,width,height) => {
-    ctx.beginPath()
-    ctx.rect(0,height - 50,width,50)
-    ctx.fillStyle = '#0e0e0eff';
-    ctx.fill()
-    ctx.closePath()
+export const drawDownPath = (ctx,groundTiles) => {
+    groundTiles.forEach(tile => {
+        ctx.beginPath()
+        ctx.fillStyle = '#0e0e0eff';
+        ctx.rect(tile.x,tile.y,tile.width,tile.height)
+        ctx.fill()
+        ctx.closePath()
+    })
 }
 
 export const keyListners = (keys,params) => {
