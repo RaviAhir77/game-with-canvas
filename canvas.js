@@ -1,8 +1,9 @@
-import { drawRactagnle,drawDownPath,keyListners,drawObstacle,spawnObstacle,isColliding} from "./reusable.js";
+import { drawRactagnle,drawDownPath,keyListners,drawObstacle,spawnObstacle,isColliding,isFrontSideCollision} from "./reusable.js";
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById('mycanvas');
 const ctx = canvas.getContext('2d');
-const clearbtn = document.getElementById('clearBtn')
+const restartBtn = document.getElementById('restartBtn')
+let gameOver = false
 
 const width = canvas.width;
 const height = canvas.height;
@@ -50,12 +51,23 @@ const tileIncrementer = () => {
   })
 }
 
-keyListners(keys,params)
+window.onload = () => {
+  keyListners(keys,params)
+}
 
 function updateObstacle(){
   obstacle.forEach(o => {
     o.x -= params.speed;
   })
+
+  for (let o of obstacle) {
+      if (isFrontSideCollision(params, o)) {
+          console.log("Hit front side! Player OUT");
+          gameOver = true;
+          gameOverButton()
+          return
+      }
+  }
 
   obstacle = obstacle.filter(o => o.x + o.width > 0)
 
@@ -71,9 +83,16 @@ function render(){
   drawRactagnle(ctx,width,height,params)
   drawObstacle(ctx,obstacle)
   updateObstacle()
+  
 }
 
 function update(){
+   if (gameOver) {
+    ctx.font = "40px Arial";
+    ctx.fillStyle = "red";
+    ctx.fillText("Game Over", width / 2 - 50, height / 2);
+    return;
+  }
   if(keys.left) params.x -= params.speed;
   if(keys.right){
     if(keys.right) params.x += params.speed;
@@ -116,4 +135,13 @@ function update(){
   requestAnimationFrame(update)
 }
 
- update();
+update();
+
+function gameOverButton() {
+  cancelAnimationFrame(update);
+  restartBtn.style.display = "block";
+}
+
+restartBtn.addEventListener("click", () => {
+  location.reload(); // refresh the page and restart everything
+});

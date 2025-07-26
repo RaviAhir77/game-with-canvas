@@ -69,20 +69,28 @@ export const drawObstacle = (ctx,obs) => {
         ctx.fillStyle = o.color
         ctx.fillRect(o.x,o.y,o.width,o.height)
         ctx.closePath()
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#ff1010';
+        ctx.lineWidth = 3;
+        ctx.moveTo(o.x, o.y);                   
+        ctx.lineTo(o.x, o.y + o.height);        
+        ctx.stroke();
+        ctx.closePath();
     })
 }
 
 export const spawnObstacle = (width,height,obstacle) => {
     const lastX = Math.max(...obstacle.map(o => o.x),width)
     const gap = Math.random() * 200 + 350;
+    const randomHeight = (Math.random() * 50) + 50;
     obstacle.push({
         x : lastX + gap,
-        y : height - 100,
+        y : height - (50 + randomHeight),
         width : 50,
-        height : 50,
+        height : randomHeight,
         color : '#98ed5bff'
     })
-    console.log("obstacle log :",obstacle)
 }
 
 export const isColliding = (a,b) => {
@@ -90,3 +98,13 @@ export const isColliding = (a,b) => {
         a.x < b.x + b.width && a.x + a.rectWidth > b.x && a.y < b.y + b.height && a.y + a.rectHeight > b.y
     )
 }
+
+export const isFrontSideCollision = (player, obstacle) => {
+    const buffer = 5; // small buffer to allow clean edge detection
+    return (
+        player.x + player.rectWidth >= obstacle.x &&                 // touches left side
+        player.x + player.rectWidth <= obstacle.x + buffer &&       // not deep inside
+        player.y < obstacle.y + obstacle.height &&
+        player.y + player.rectHeight > obstacle.y
+    );
+};
