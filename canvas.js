@@ -1,4 +1,4 @@
-import { drawRactagnle,drawDownPath,keyListners,drawObstacle, isColliding} from "./reusable.js";
+import { drawRactagnle,drawDownPath,keyListners,drawObstacle,spawnObstacle,isColliding} from "./reusable.js";
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById('mycanvas');
 const ctx = canvas.getContext('2d');
@@ -12,7 +12,7 @@ const params = {
   rectWidth: 50,
   x: 50,
   y: 550,
-  speed: 5,
+  speed: 3,
   valocityY : 0,
   gravity : 0.5,
   isJumping : false,
@@ -24,13 +24,17 @@ const keys = {
   right : false,
 }
 
-const obstacle = {
-  x : 400,
-  y : height - 100,
-  width : 50,
-  height : 50,
-  color : '#98ed5bff'
-}
+// const obstacle = {
+//   x : 400,
+//   y : height - 100,
+//   width : 50,
+//   height : 50,
+//   color : '#98ed5bff'
+// }
+
+let obstacle = [];
+for(let i = 0; i < 3; i++) spawnObstacle(width,height,obstacle)
+
 
 const tilesWidth = 100;
 const groundTiles = [];
@@ -55,11 +59,25 @@ const tileIncrementer = () => {
 
 keyListners(keys,params)
 
+function updateObstacle(){
+  obstacle.forEach(o => {
+    o.x -= params.speed;
+  })
+
+  obstacle = obstacle.filter(o => o.x + o.width > 0)
+
+  const lastX = Math.max(...obstacle.map(o => o.x))
+  if(lastX < width + 300){
+    spawnObstacle(width,height,obstacle)
+  }
+}
+
 function render(){
   ctx.clearRect(0,0,width,height)
   drawDownPath(ctx,groundTiles)
   drawRactagnle(ctx,width,height,params)
   drawObstacle(ctx,obstacle)
+  updateObstacle()
 }
 
 function update(){

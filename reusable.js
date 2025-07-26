@@ -64,10 +64,25 @@ export const keyListners = (keys,params) => {
 }
 
 export const drawObstacle = (ctx,obs) => {
-    ctx.beginPath();
-    ctx.fillStyle = obs.color
-    ctx.fillRect(obs.x,obs.y,obs.width,obs.height)
-    ctx.closePath()
+    obs.map(o => {
+        ctx.beginPath();
+        ctx.fillStyle = o.color
+        ctx.fillRect(o.x,o.y,o.width,o.height)
+        ctx.closePath()
+    })
+}
+
+export const spawnObstacle = (width,height,obstacle) => {
+    const lastX = Math.max(...obstacle.map(o => o.x),width)
+    const gap = Math.random() * 200 + 350;
+    obstacle.push({
+        x : lastX + gap,
+        y : height - 100,
+        width : 50,
+        height : 50,
+        color : '#98ed5bff'
+    })
+    console.log("obstacle log :",obstacle)
 }
 
 export const isColliding = (a,b) => {
