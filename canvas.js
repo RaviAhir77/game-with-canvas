@@ -10,7 +10,7 @@ const height = canvas.height;
 const params = {
   rectHeight: 50,
   rectWidth: 50,
-  x: 50,
+  x: 350,
   y: 550,
   speed: 3,
   valocityY : 0,
@@ -24,13 +24,6 @@ const keys = {
   right : false,
 }
 
-// const obstacle = {
-//   x : 400,
-//   y : height - 100,
-//   width : 50,
-//   height : 50,
-//   color : '#98ed5bff'
-// }
 
 let obstacle = [];
 for(let i = 0; i < 3; i++) spawnObstacle(width,height,obstacle)
@@ -90,19 +83,22 @@ function update(){
   params.valocityY += params.gravity;
   params.y += params.valocityY
 
-  if(isColliding(params,obstacle)){
-    const playerBottom = params.y + params.rectHeight;
-    const obstacleTop = obstacle.y;
-
-    if(params.valocityY >= 0 && playerBottom - params.valocityY <= obstacleTop){
-      params.y = obstacle.y - params.rectHeight;
-      params.valocityY = 0;
-      params.isJumping = false
-    }else{
-      if(params.x < obstacle.x){
-        params.x = obstacle.x - params.rectWidth;
+  for(let i = 0; i < obstacle.length; i++){
+    const o = obstacle[i]
+    if(isColliding(params,o)){
+      const playerBottom = params.y + params.rectHeight;
+      const obstacleTop = o.y;
+  
+      if(params.valocityY >= 0 && playerBottom - params.valocityY <= obstacleTop){
+        params.y = o.y - params.rectHeight;
+        params.valocityY = 0;
+        params.isJumping = false
       }else{
-        params.x = obstacle.x + params.rectWidth;
+        if(params.x < o.x){
+          params.x = o.x - params.rectWidth;
+        }else{
+          params.x = o.x + params.rectWidth;
+        }
       }
     }
   }
