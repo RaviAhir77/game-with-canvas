@@ -75,8 +75,8 @@ function render(){
 
 function update(){
   if(keys.left) params.x -= params.speed;
-  // if(keys.right) params.x += params.speed;
   if(keys.right){
+    if(keys.right) params.x += params.speed;
     groundTiles.forEach(tile => tile.x -= params.speed)
   }
 
