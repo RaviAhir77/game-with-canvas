@@ -61,6 +61,33 @@ export const keyListners = (keys,params) => {
             keys.right =false;
         }
     })
+
+    const leftBtn = document.getElementById('leftbtn');
+    const rightBtn = document.getElementById('rightbtn');
+    const jumpBtn = document.getElementById('jumpbtn');
+
+    if (leftBtn && rightBtn && jumpBtn) {
+        leftBtn.addEventListener('touchstart', () => {
+            keys.left = true;
+        });
+        leftBtn.addEventListener('touchend', () => {
+            keys.left = false;
+        });
+
+        rightBtn.addEventListener('touchstart', () => {
+            keys.right = true;
+        });
+        rightBtn.addEventListener('touchend', () => {
+            keys.right = false;
+        });
+
+        jumpBtn.addEventListener('touchstart', () => {
+            if (!params.isJumping) {
+                params.valocityY = params.jumpPower;
+                params.isJumping = true;
+            }
+        });
+    }
 }
 
 export const drawObstacle = (ctx,obs) => {

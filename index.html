@@ -8,8 +8,18 @@
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="mycanvas" height="700" width="1200" style="background-color: gray; background: url('./assest/night_image.jpg'); background-size: cover;"></canvas>
+        <canvas id="mycanvas" style="background-color: gray; background: url('./assest/night_image.jpg'); background-size: cover;"></canvas>
         <button id="restartBtn" style="display: none;">Restart</button>
+
+        <div class="buttons">
+            <div class="movement">
+                <button id="leftbtn">left</button>
+                <button id="rightbtn">right</button>
+            </div>
+            <div class="jump">
+                <button id="jumpbtn">jump</button>
+            </div>
+        </div>
     </div>
     <script type="module" src="canvas.js"></script>
 </body>
